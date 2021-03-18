@@ -8,8 +8,8 @@ public class Main {
 	public static void main(String[] args) {
 		// Create all of the objects and threads
 		Box b = new Box();
-		IntermediateHost ih1 = new IntermediateHost(23, b);
-		IntermediateHost ih2 = new IntermediateHost(69, b);
+		IntermediateHost ih1 = new IntermediateHost(23, b, true);
+		IntermediateHost ih2 = new IntermediateHost(69, b, false);
 		Thread ihClient = new Thread(ih1, "Intermediate Host-Client");
 		Thread ihServer = new Thread(ih2, "Intermediate Host-Server");
 		Client c = new Client(10, 23);
