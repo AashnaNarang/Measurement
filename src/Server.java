@@ -15,12 +15,14 @@ public class Server extends SenderReceiver implements Runnable {
 	private DatagramPacket receivePacket;
 	private static final byte[] WRITE = new byte[] { 0, 4, 0, 0 };
 	private static final byte[] READ = new byte[] { 0, 3, 0, 1 };
+	private boolean running;
 
 	/**
 	 * Public constructor to initialize instance variables
 	 */
 	public Server(int intHostPort) {
 		super(intHostPort);
+		running = true;
 	}
 
 	/**
@@ -107,14 +109,15 @@ public class Server extends SenderReceiver implements Runnable {
 
 	@Override
 	public void run() {
-		while (true) {
+		while (running) {
 			try {
 				sendRequestAndReceiveData();
 				sendDataAndReceiveAck();
 			} catch (IOException e) {
 				System.out.println("Server closed.");
 				closeSocket();
-				System.exit(1);
+				running = false;
+//				System.exit(1);
 			}
 		}
 

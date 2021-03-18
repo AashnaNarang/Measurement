@@ -12,7 +12,7 @@ public class Main {
 		IntermediateHost ih2 = new IntermediateHost(69, b);
 		Thread ihClient = new Thread(ih1, "Intermediate Host-Client");
 		Thread ihServer = new Thread(ih2, "Intermediate Host-Server");
-		Client c = new Client(1000, 23);
+		Client c = new Client(10, 23);
 		Thread client = new Thread(c, "Client");
 		Server s = new Server(69);
 		Thread server = new Thread(s, "Server");
