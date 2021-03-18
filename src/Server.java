@@ -117,7 +117,6 @@ public class Server extends SenderReceiver implements Runnable {
 				System.out.println("Server closed.");
 				closeSocket();
 				running = false;
-//				System.exit(1);
 			}
 		}
 

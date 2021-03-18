@@ -24,6 +24,7 @@ public class IntermediateHost implements Runnable {
 	 * Public constructor to initialize instance variables and set up a socket for a specific port
 	 * @param port Port to communicate with
 	 * @param box Box object to store data that is being communicated between IntermediateHost threads
+	 * @param measureTime If this thread should measure the time of receiving data and sending the response from server, i.e. is this the client
 	 */
 	public IntermediateHost(int port, Box box, boolean measureTime) {
 		try {
@@ -52,10 +53,8 @@ public class IntermediateHost implements Runnable {
 			if(measureTime) {
 				String msg = new String(sendPacket.getData(), 0, sendPacket.getLength());
 				if(!msg.equals("Request acknowledged")) {
-					endTime = System.nanoTime();
-					long timeElapsed = endTime - startTime;
-					singlePacketExecTimes.add(timeElapsed);
-			        System.out.println(Thread.currentThread().getName() + " RPC Execution time in nanoseconds  : " + timeElapsed);
+					// right now we're in the client intermediate host thread + we just sent a packet with data to client (i.e. RPC is done)
+					captureMeasurement();
 				}
 			}
 		} catch (SocketException se) {
@@ -71,6 +70,18 @@ public class IntermediateHost implements Runnable {
 		}
 
 		System.out.println(Thread.currentThread().getName() + ": packet sent\n");
+	}
+	
+	/**
+	 * End the timer and saved elapsed time to perform full RPC call.
+	 */
+	private void captureMeasurement() {
+		endTime = System.nanoTime();
+		long timeElapsed = endTime - startTime;
+		singlePacketExecTimes.add(timeElapsed);
+        System.out.println(Thread.currentThread().getName() + " RPC Execution time in nanoseconds  : " + timeElapsed);
+        startTime = 0;
+        endTime = 0;
 	}
 
 	
@@ -88,17 +99,7 @@ public class IntermediateHost implements Runnable {
 		} catch (SocketTimeoutException e1) {
 			if(measureTime) {
 				System.out.println(Thread.currentThread().getName() + " received wait timeout");
-				System.out.println("Number of times collected: " + singlePacketExecTimes.size());
-				LongSummaryStatistics stats = singlePacketExecTimes.stream().mapToLong(Long::longValue).summaryStatistics();
-				double average = stats.getAverage();
-				System.out.println("average: " + average);
-				double sumDiffs = 0;
-				for(long time: singlePacketExecTimes) {
-					double temp = time - average;
-					sumDiffs += Math.pow(temp, 2);
-				}
-				
-				System.out.println("variance: " + sumDiffs/(singlePacketExecTimes.size() - 1));
+				printMeasurements();
 				sendSocket.close();
 				receiveSocket.close();
 				System.exit(1);
@@ -123,8 +124,8 @@ public class IntermediateHost implements Runnable {
 		if (msg.equals("Please send me data thx")) {
 			resp = box.get();
 		} else {
-			// Now we know this is the remote procedure call starting point bc we got data
 			if (measureTime) {
+				// Now we know this is the start of remote procedure call bc we are receiving data + in the client intermediate host thread
 				startTime = System.nanoTime();
 			}
 			box.put(data);
@@ -140,6 +141,20 @@ public class IntermediateHost implements Runnable {
 			System.exit(1);
 		}
 	}
+	
+	private void printMeasurements() {
+		System.out.println("Number of times collected: " + singlePacketExecTimes.size());
+		LongSummaryStatistics stats = singlePacketExecTimes.stream().mapToLong(Long::longValue).summaryStatistics();
+		double average = stats.getAverage();
+		System.out.println("average: " + average);
+		double sumDiffs = 0;
+		for(long time: singlePacketExecTimes) {
+			double temp = time - average;
+			sumDiffs += Math.pow(temp, 2);
+		}
+		
+		System.out.println("variance: " + sumDiffs/(singlePacketExecTimes.size() - 1));
+	}
 
 
 	@Override
@@ -148,16 +163,9 @@ public class IntermediateHost implements Runnable {
 	 */
 	public void run() {
 		while (true) {
-//			long startTime = System.nanoTime();
 			receivePacket();
 			sendPacket();
-//			long endTime = System.nanoTime();
-//			long timeElapsed = endTime - startTime;
-//			singlePacketExecTimes.add(timeElapsed);
-//	        System.out.println(Thread.currentThread().getName() + " Execution time in nanoseconds  : " + timeElapsed);
 		}
 	}
-	
-	
 
 }
