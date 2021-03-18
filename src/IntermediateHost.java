@@ -142,6 +142,9 @@ public class IntermediateHost implements Runnable {
 		}
 	}
 	
+	/**
+	 * Print out average + variance of all RPC calls made during the program
+	 */
 	private void printMeasurements() {
 		System.out.println("Number of times collected: " + singlePacketExecTimes.size());
 		LongSummaryStatistics stats = singlePacketExecTimes.stream().mapToLong(Long::longValue).summaryStatistics();
