@@ -51,9 +51,9 @@ public class Server extends SenderReceiver implements Runnable {
 	public void sendDataAndReceiveAck() throws IOException {
 		byte[] response = validateAndCreateResponse(receivePacket.getData());
 		if (response != null) {
-			System.out.println("Received valid data\n");
+//			System.out.println("Received valid data\n");
 		} else {
-			System.out.println("Received invalid data\n");
+//			System.out.println("Received invalid data\n");
 			throw new IOException();
 		}
 
@@ -114,7 +114,7 @@ public class Server extends SenderReceiver implements Runnable {
 				sendRequestAndReceiveData();
 				sendDataAndReceiveAck();
 			} catch (IOException e) {
-				System.out.println("Server closed.");
+//				System.out.println("Server closed.");
 				closeSocket();
 				running = false;
 			}

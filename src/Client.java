@@ -33,7 +33,7 @@ public class Client extends SenderReceiver implements Runnable {
 	 */
 	public void sendDataAndReceiveAck() {
 		requestNumber++;
-		System.out.println("Client request number: " + requestNumber);
+//		System.out.println("Client request number: " + requestNumber);
 		byte[] msg = createMsg();
 		try {
 			sendPacket(msg, InetAddress.getLocalHost());

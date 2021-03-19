@@ -46,7 +46,7 @@ public class IntermediateHost implements Runnable {
 	 * Send a datagram packet
 	 */
 	private void sendPacket() {
-		System.out.println(Thread.currentThread().getName() + ": Sending packet:");
+//		System.out.println(Thread.currentThread().getName() + ": Sending packet:");
 		
 		try {
 			sendSocket.send(sendPacket);
@@ -69,7 +69,7 @@ public class IntermediateHost implements Runnable {
 			System.exit(1);
 		}
 
-		System.out.println(Thread.currentThread().getName() + ": packet sent\n");
+//		System.out.println(Thread.currentThread().getName() + ": packet sent\n");
 	}
 	
 	/**
@@ -91,20 +91,20 @@ public class IntermediateHost implements Runnable {
 	private void receivePacket() {
 		byte data[] = new byte[1010];
 		receivePacket = new DatagramPacket(data, data.length);
-		System.out.println(Thread.currentThread().getName() + ": Waiting for Packet.\n");
+//		System.out.println(Thread.currentThread().getName() + ": Waiting for Packet.\n");
 
 		try {
-			System.out.println(Thread.currentThread().getName() + " is waiting...");
+//			System.out.println(Thread.currentThread().getName() + " is waiting...");
 			receiveSocket.receive(receivePacket);
 		} catch (SocketTimeoutException e1) {
 			if(measureTime) {
-				System.out.println(Thread.currentThread().getName() + " received wait timeout");
+//				System.out.println(Thread.currentThread().getName() + " received wait timeout");
 				printMeasurements();
 				sendSocket.close();
 				receiveSocket.close();
 				System.exit(1);
 			} else {
-				System.out.println(Thread.currentThread().getName() + " received wait timeout");
+//				System.out.println(Thread.currentThread().getName() + " received wait timeout");
 				sendSocket.close();
 				receiveSocket.close();
 			}
@@ -117,7 +117,7 @@ public class IntermediateHost implements Runnable {
 			System.exit(1);
 		}
 
-		System.out.println(Thread.currentThread().getName() + ": Packet received:");
+//		System.out.println(Thread.currentThread().getName() + ": Packet received:");
 		
 		String msg = new String(data, 0, receivePacket.getLength());
 		byte[] resp;

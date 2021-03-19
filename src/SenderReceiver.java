@@ -49,7 +49,7 @@ public class SenderReceiver {
 			closeSocket();
 			System.exit(1);
 		} 
-		System.out.println(Thread.currentThread().getName() + ": Packet sent.\n");
+//		System.out.println(Thread.currentThread().getName() + ": Packet sent.\n");
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class SenderReceiver {
 		DatagramPacket receivePacket = new DatagramPacket(data, data.length);
 
 		try {
-			System.out.println(Thread.currentThread().getName() + " is waiting...");
+//			System.out.println(Thread.currentThread().getName() + " is waiting...");
 			sendReceiveSocket.receive(receivePacket);
 		} catch (SocketTimeoutException e1) {
 			closeSocket();
@@ -75,7 +75,7 @@ public class SenderReceiver {
 			System.exit(1);
 		}
 
-		System.out.println(Thread.currentThread().getName() + ": Packet received:");
+//		System.out.println(Thread.currentThread().getName() + ": Packet received:");
 		return receivePacket;
 	}
 	

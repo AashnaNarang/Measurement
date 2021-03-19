@@ -31,7 +31,7 @@ public class Box {
 		}
 		this.data = data;
 		empty = false;
-		System.out.println(Thread.currentThread().getName() + " put in box");
+//		System.out.println(Thread.currentThread().getName() + " put in box");
 		notifyAll();
 	}
 
@@ -52,7 +52,7 @@ public class Box {
 		data = null;
 		empty = true;
 		notifyAll();
-		System.out.println(Thread.currentThread().getName() + " got from box");
+//		System.out.println(Thread.currentThread().getName() + " got from box");
 		return d;
 	}
 }
